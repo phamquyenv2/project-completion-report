@@ -1,4 +1,4 @@
-using Dapper;
+﻿using Dapper;
 using ProjectCompletionReport.Database;
 using ProjectCompletionReport.Models;
 
@@ -6,10 +6,6 @@ namespace ProjectCompletionReport.Repositories
 {
     public class BaoCaoDuAnRepository
     {
-        /// <summary>
-        /// Lấy toàn bộ báo cáo tỷ lệ hoàn thành dự án (từ VIEW).
-        /// TY_LE_HT, TY_LE_CHT, SL_TASK được tính tự động.
-        /// </summary>
         public List<BaoCaoTyLeHoanThanhDuAn> GetBaoCaoDuAn()
         {
             using var conn = DbConnectionFactory.Create();
@@ -21,10 +17,6 @@ namespace ProjectCompletionReport.Repositories
 
             return conn.Query<BaoCaoTyLeHoanThanhDuAn>(sql).ToList();
         }
-
-        /// <summary>
-        /// Lấy báo cáo theo mã hợp đồng (từ VIEW).
-        /// </summary>
         public BaoCaoTyLeHoanThanhDuAn? GetByMaHD(string maHD)
         {
             using var conn = DbConnectionFactory.Create();

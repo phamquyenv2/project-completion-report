@@ -1,10 +1,5 @@
-namespace ProjectCompletionReport.Models
+﻿namespace ProjectCompletionReport.Models
 {
-    /// <summary>
-    /// Bảng phân công task – FK → HOP_DONG, NHAN_VIEN.
-    /// Chỉ lưu SL_TASK_HT và SL_TASK_CHT.
-    /// SL_TASK, TY_LE_HT, TY_LE_CHT tính tự động trong VIEW.
-    /// </summary>
     public class PhanCongTask
     {
         public int ID { get; set; }

@@ -1,17 +1,17 @@
-using LiveChartsCore.SkiaSharpView.WinForms;
+﻿using LiveChartsCore.SkiaSharpView.WinForms;
 using LiveChartsCore.SkiaSharpView.Painting;
 using ProjectCompletionReport.ChartBuilders;
 using ProjectCompletionReport.Models;
 using ProjectCompletionReport.Services;
 using SkiaSharp;
-
+using System.Drawing;
+using System.Windows.Forms;
+using System.Linq;
 namespace ProjectCompletionReport.Forms
 {
     public partial class MainDashboard : Form
     {
         private readonly BaoCaoService _service = new();
-
-        // LiveCharts2 controls
         private PieChart? _doughnutChart;
         private CartesianChart? _basicBarsChart;
         private CartesianChart? _stackedBarsChart;
@@ -20,172 +20,165 @@ namespace ProjectCompletionReport.Forms
         {
             InitializeComponent();
             InitializeCharts();
-            LoadComboBox();
-
-            this.cboMaHD.SelectedIndexChanged += CboMaHD_SelectedIndexChanged;
             this.Load += MainDashboard_Load;
         }
 
-        // ══════════════════════════════════════════════
-        // Khởi tạo Chart controls và gắn vào Panel
-        // ══════════════════════════════════════════════
         private void InitializeCharts()
         {
-            // ── Doughnut Chart ──
             _doughnutChart = new PieChart
             {
                 Dock = DockStyle.Fill,
-                BackColor = System.Drawing.Color.FromArgb(25, 30, 55),
+                BackColor = Color.White,
                 InitialRotation = -90,
                 LegendPosition = LiveChartsCore.Measure.LegendPosition.Bottom,
-                LegendTextPaint = new SolidColorPaint(SKColors.White) { SKTypeface = SKTypeface.FromFamilyName("Segoe UI") },
+                LegendTextPaint = new SolidColorPaint(new SKColor(51, 51, 51)) { SKTypeface = SKTypeface.FromFamilyName("Segoe UI") },
                 LegendTextSize = 13
             };
             pnlDoughnut.Controls.Add(_doughnutChart);
-            _doughnutChart.BringToFront(); // đảm bảo nằm dưới label title
+            _doughnutChart.BringToFront();
 
-            // ── Basic Bars Chart ──
             _basicBarsChart = new CartesianChart
             {
                 Dock = DockStyle.Fill,
-                BackColor = System.Drawing.Color.FromArgb(25, 30, 55),
+                BackColor = Color.White,
                 LegendPosition = LiveChartsCore.Measure.LegendPosition.Bottom,
-                LegendTextPaint = new SolidColorPaint(SKColors.White) { SKTypeface = SKTypeface.FromFamilyName("Segoe UI") },
+                LegendTextPaint = new SolidColorPaint(new SKColor(51, 51, 51)) { SKTypeface = SKTypeface.FromFamilyName("Segoe UI") },
                 LegendTextSize = 13
             };
             pnlBasicBars.Controls.Add(_basicBarsChart);
             _basicBarsChart.BringToFront();
 
-            // ── Stacked Bars Chart ──
             _stackedBarsChart = new CartesianChart
             {
                 Dock = DockStyle.Fill,
-                BackColor = System.Drawing.Color.FromArgb(25, 30, 55),
+                BackColor = Color.White,
                 LegendPosition = LiveChartsCore.Measure.LegendPosition.Bottom,
-                LegendTextPaint = new SolidColorPaint(SKColors.White) { SKTypeface = SKTypeface.FromFamilyName("Segoe UI") },
+                LegendTextPaint = new SolidColorPaint(new SKColor(51, 51, 51)) { SKTypeface = SKTypeface.FromFamilyName("Segoe UI") },
                 LegendTextSize = 13
             };
             pnlStackedBars.Controls.Add(_stackedBarsChart);
             _stackedBarsChart.BringToFront();
         }
 
-        // ══════════════════════════════════════════════
-        // Load ComboBox mã hợp đồng
-        // ══════════════════════════════════════════════
-        private void LoadComboBox()
+        private void MainDashboard_Load(object? sender, System.EventArgs e)
         {
-            var danhSach = _service.LayDanhSachMaHD();
-            cboMaHD.Items.Clear();
-            cboMaHD.Items.Add("-- Tất cả --");
-            foreach (var ma in danhSach)
-            {
-                cboMaHD.Items.Add(ma);
-            }
-            cboMaHD.SelectedIndex = 0;
+            LoadData();
         }
 
-        // ══════════════════════════════════════════════
-        // Sự kiện
-        // ══════════════════════════════════════════════
-        private void MainDashboard_Load(object? sender, EventArgs e)
+                private void Grid_RowPostPaint(object? sender, DataGridViewRowPostPaintEventArgs e)
         {
-            LoadAllCharts();
+            var grid = (DataGridView)sender!;
+            var rowIdx = (e.RowIndex + 1).ToString();
+            var centerFormat = new StringFormat
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center
+            };
+            var headerBounds = new Rectangle(e.RowBounds.Left, e.RowBounds.Top, grid.RowHeadersWidth, e.RowBounds.Height);
+            e.Graphics?.DrawString(rowIdx, grid.Font, SystemBrushes.ControlText, headerBounds, centerFormat);
         }
 
-        private void CboMaHD_SelectedIndexChanged(object? sender, EventArgs e)
+        private void LoadData()
         {
-            LoadAllCharts();
-        }
+            var duAnData = _service.LayTatCaDuAn();
+            var nhanVienData = _service.LayTatCaNhanVien();
 
-        // ══════════════════════════════════════════════
-        // Load dữ liệu và cập nhật tất cả biểu đồ
-        // ══════════════════════════════════════════════
-        private void LoadAllCharts()
-        {
-            string selectedMaHD = cboMaHD.SelectedItem?.ToString() ?? "";
-            bool isAll = selectedMaHD == "-- Tất cả --" || string.IsNullOrEmpty(selectedMaHD);
+            var filteredNhanVien = nhanVienData.Where(x => x.MA_HD == "HD001LQ-ITM").ToList();
 
-            // ── 1. Doughnut Chart ──
-            LoadDoughnutChart(isAll ? null : selectedMaHD);
-
-            // ── 2. Basic Bars Chart ──
-            LoadBasicBarsChart();
-
-            // ── 3. Stacked Bars Chart ──
-            LoadStackedBarsChart(isAll ? null : selectedMaHD);
-        }
-
-        /// <summary>
-        /// Doughnut: SL_TASK_HT vs SL_TASK_CHT cho 1 dự án.
-        /// Nếu chọn "Tất cả" thì lấy dự án đầu tiên.
-        /// </summary>
-        private void LoadDoughnutChart(string? maHD)
-        {
-            if (_doughnutChart == null) return;
-
-            BaoCaoTyLeHoanThanhDuAn? duAn;
-
-            if (maHD != null)
+            void StyleGrid(DataGridView grid)
             {
-                duAn = _service.LayDuAnTheoMaHD(maHD);
-            }
-            else
-            {
-                var all = _service.LayTatCaDuAn();
-                duAn = all.FirstOrDefault();
+                grid.AllowUserToAddRows = false;
+                grid.AllowUserToDeleteRows = false;
+                grid.ReadOnly = true;
+                grid.BackgroundColor = Color.White;
+                grid.BorderStyle = BorderStyle.None;
+                grid.CellBorderStyle = DataGridViewCellBorderStyle.Single;
+                grid.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
+                grid.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
+                grid.GridColor = Color.FromArgb(200, 215, 240);
+                grid.EnableHeadersVisualStyles = false;
+                
+                grid.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(220, 235, 255);
+                grid.ColumnHeadersDefaultCellStyle.ForeColor = Color.Black;
+                grid.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9F, FontStyle.Regular);
+                grid.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                
+                grid.DefaultCellStyle.SelectionBackColor = Color.White;
+                grid.DefaultCellStyle.SelectionForeColor = Color.Black;
+                
+                grid.RowHeadersDefaultCellStyle.BackColor = Color.WhiteSmoke;
+                grid.RowHeadersWidth = 40;
+                
+                grid.ScrollBars = ScrollBars.None;
+                grid.RowTemplate.Height = 22;
+                grid.ColumnHeadersHeight = 25;
+                grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+
+                grid.RowPostPaint -= Grid_RowPostPaint;
+                grid.RowPostPaint += Grid_RowPostPaint;
             }
 
-            if (duAn == null) return;
+            StyleGrid(gridDuAn);
+            gridDuAn.DataSource = duAnData.Select(x => new {
+                MaHD = x.MA_HD,
+                SLTaskHT = x.SL_TASK_HT,
+                SLTaskCHT = x.SL_TASK_CHT,
+                TyLeHT = $"{x.TY_LE_HT:0.00}%",
+                TyLeCHT = $"{x.TY_LE_CHT:0.00}%",
+                MaSP = x.MA_SP,
+                SLTask = x.SL_TASK
+            }).ToList();
+            
+            gridDuAn.Columns["MaHD"].HeaderText = "Mã HĐ"; gridDuAn.Columns["MaHD"].Width = 150;
+            gridDuAn.Columns["SLTaskHT"].HeaderText = "SL Task HT"; gridDuAn.Columns["SLTaskHT"].Width = 100; gridDuAn.Columns["SLTaskHT"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            gridDuAn.Columns["SLTaskCHT"].HeaderText = "SL Task CHT"; gridDuAn.Columns["SLTaskCHT"].Width = 100; gridDuAn.Columns["SLTaskCHT"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            gridDuAn.Columns["TyLeHT"].HeaderText = "Tỷ lệ HT"; gridDuAn.Columns["TyLeHT"].Width = 90; gridDuAn.Columns["TyLeHT"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            gridDuAn.Columns["TyLeCHT"].HeaderText = "Tỷ lệ CHT"; gridDuAn.Columns["TyLeCHT"].Width = 90; gridDuAn.Columns["TyLeCHT"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            gridDuAn.Columns["MaSP"].HeaderText = "Mã SP"; gridDuAn.Columns["MaSP"].Width = 80;
+            gridDuAn.Columns["SLTask"].HeaderText = "SL Task"; gridDuAn.Columns["SLTask"].Width = 90; gridDuAn.Columns["SLTask"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            
+            gridDuAn.Height = (duAnData.Count * 22) + 25 + 2; // Rows + Header + Borders
 
-            lblDoughnutTitle.Text = $"🍩 TỶ LỆ HOÀN THÀNH – {duAn.MA_HD}";
-            _doughnutChart.Series = DoughnutChartBuilder.Build(duAn);
-        }
+            StyleGrid(gridNhanVien);
+            gridNhanVien.DataSource = filteredNhanVien.Select(x => new {
+                MaHD = x.MA_HD,
+                MaNV = x.MA_NV,
+                SLTaskHT = x.SL_TASK_HT,
+                SLTaskCHT = x.SL_TASK_CHT,
+                TyLeHT = $"{x.TY_LE_HT:0.00}%",
+                TyLeCHT = $"{x.TY_LE_CHT:0.00}%",
+                MaSP = x.MA_SP,
+                SLTask = x.SL_TASK
+            }).ToList();
 
-        /// <summary>
-        /// Basic Bars: Luôn hiển thị tất cả dự án để so sánh.
-        /// </summary>
-        private void LoadBasicBarsChart()
-        {
-            if (_basicBarsChart == null) return;
+            gridNhanVien.Columns["MaHD"].HeaderText = "Mã HĐ"; gridNhanVien.Columns["MaHD"].Width = 120;
+            gridNhanVien.Columns["MaNV"].HeaderText = "Mã NV"; gridNhanVien.Columns["MaNV"].Width = 100;
+            gridNhanVien.Columns["SLTaskHT"].HeaderText = "SL Task HT"; gridNhanVien.Columns["SLTaskHT"].Width = 100; gridNhanVien.Columns["SLTaskHT"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            gridNhanVien.Columns["SLTaskCHT"].HeaderText = "SL Task CHT"; gridNhanVien.Columns["SLTaskCHT"].Width = 100; gridNhanVien.Columns["SLTaskCHT"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            gridNhanVien.Columns["TyLeHT"].HeaderText = "Tỷ lệ HT"; gridNhanVien.Columns["TyLeHT"].Width = 90; gridNhanVien.Columns["TyLeHT"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            gridNhanVien.Columns["TyLeCHT"].HeaderText = "Tỷ lệ CHT"; gridNhanVien.Columns["TyLeCHT"].Width = 90; gridNhanVien.Columns["TyLeCHT"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            gridNhanVien.Columns["MaSP"].HeaderText = "Mã SP"; gridNhanVien.Columns["MaSP"].Width = 80;
+            gridNhanVien.Columns["SLTask"].HeaderText = "SL Task"; gridNhanVien.Columns["SLTask"].Width = 90; gridNhanVien.Columns["SLTask"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
-            var data = _service.LayTatCaDuAn();
-            if (data.Count == 0) return;
+            gridNhanVien.Height = (filteredNhanVien.Count * 22) + 25 + 2;
 
-            _basicBarsChart.Series = BasicBarsChartBuilder.BuildSeries(data);
-            _basicBarsChart.XAxes = BasicBarsChartBuilder.BuildXAxes(data);
-            _basicBarsChart.YAxes = BasicBarsChartBuilder.BuildYAxes();
-        }
-
-        /// <summary>
-        /// Stacked Bars: TY_LE_HT + TY_LE_CHT theo nhân viên.
-        /// Lọc theo mã hợp đồng đang chọn.
-        /// </summary>
-        private void LoadStackedBarsChart(string? maHD)
-        {
-            if (_stackedBarsChart == null) return;
-
-            List<BaoCaoTyLeHoanThanhNhanVien> data;
-
-            if (maHD != null)
+            if (duAnData.Count > 0)
             {
-                data = _service.LayNhanVienTheoMaHD(maHD);
-                lblStackedBarsTitle.Text = $"📈 TỶ LỆ HOÀN THÀNH THEO NHÂN VIÊN – {maHD}";
-            }
-            else
-            {
-                data = _service.LayTatCaNhanVien();
-                lblStackedBarsTitle.Text = "📈 TỶ LỆ HOÀN THÀNH THEO NHÂN VIÊN (Stacked Bars)";
+                var firstDuAn = duAnData.First();
+                lblDoughnutTitle.Text = firstDuAn.MA_HD;
+                _doughnutChart!.Series = DoughnutChartBuilder.Build(firstDuAn);
+
+                _basicBarsChart!.Series = BasicBarsChartBuilder.BuildSeries(duAnData);
+                _basicBarsChart.XAxes = BasicBarsChartBuilder.BuildXAxes(duAnData);
+                _basicBarsChart.YAxes = BasicBarsChartBuilder.BuildYAxes();
             }
 
-            if (data.Count == 0)
+            if (filteredNhanVien.Count > 0)
             {
-                _stackedBarsChart.Series = Array.Empty<LiveChartsCore.ISeries>();
-                return;
+                _stackedBarsChart!.Series = StackedBarsChartBuilder.BuildSeries(filteredNhanVien);
+                _stackedBarsChart.XAxes = StackedBarsChartBuilder.BuildXAxes(filteredNhanVien);
+                _stackedBarsChart.YAxes = StackedBarsChartBuilder.BuildYAxes();
             }
-
-            _stackedBarsChart.Series = StackedBarsChartBuilder.BuildSeries(data);
-            _stackedBarsChart.XAxes = StackedBarsChartBuilder.BuildXAxes(data);
-            _stackedBarsChart.YAxes = StackedBarsChartBuilder.BuildYAxes();
         }
     }
 }

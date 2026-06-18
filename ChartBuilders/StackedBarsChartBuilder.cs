@@ -1,17 +1,12 @@
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
+using ProjectCompletionReport.Helpers;
 using ProjectCompletionReport.Models;
 using SkiaSharp;
 
 namespace ProjectCompletionReport.ChartBuilders
 {
-    /// <summary>
-    /// Stacked Bars Chart – Gallery: Bars → Stacked Bars
-    /// X-axis: Mã nhân viên (LAMNV, THANGPT, QUANGDV, LUANPT)
-    /// Series: TY_LE_HT và TY_LE_CHT (xếp chồng lên nhau → 100%)
-    /// => Giống biểu đồ phía dưới trong hình Excel.
-    /// </summary>
     public static class StackedBarsChartBuilder
     {
         public static ISeries[] BuildSeries(List<BaoCaoTyLeHoanThanhNhanVien> data)
@@ -20,24 +15,18 @@ namespace ProjectCompletionReport.ChartBuilders
             {
                 new StackedColumnSeries<double>
                 {
-                    Name = "TỶ LỆ HT (%)",
-                    Values = data.Select(x => x.TY_LE_HT).ToArray(),
-                    Fill = new SolidColorPaint(new SKColor(76, 175, 80)),   // Xanh lá
-                    DataLabelsPaint = new SolidColorPaint(SKColors.White),
-                    DataLabelsSize = 12,
-                    DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Middle,
-                    DataLabelsFormatter = p => $"{p.Coordinate.PrimaryValue:0}%",
+                    Name = "TY LE HT",
+                    Values = data.Select(x => (double)x.TY_LE_HT).ToArray(),
+                    Fill = new SolidColorPaint(ColorPalette.Primary),
+                    DataLabelsPaint = null, 
                     MaxBarWidth = 40
                 },
                 new StackedColumnSeries<double>
                 {
-                    Name = "TỶ LỆ CHT (%)",
-                    Values = data.Select(x => x.TY_LE_CHT).ToArray(),
-                    Fill = new SolidColorPaint(new SKColor(244, 67, 54)),   // Đỏ
-                    DataLabelsPaint = new SolidColorPaint(SKColors.White),
-                    DataLabelsSize = 12,
-                    DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Middle,
-                    DataLabelsFormatter = p => $"{p.Coordinate.PrimaryValue:0}%",
+                    Name = "TY LE CHT",
+                    Values = data.Select(x => (double)x.TY_LE_CHT).ToArray(),
+                    Fill = new SolidColorPaint(ColorPalette.Accent),
+                    DataLabelsPaint = null,
                     MaxBarWidth = 40
                 }
             };
@@ -49,9 +38,9 @@ namespace ProjectCompletionReport.ChartBuilders
             {
                 new Axis
                 {
-                    Labels = data.Select(x => x.MA_NV).ToArray(),
-                    LabelsPaint = new SolidColorPaint(SKColors.White),
-                    TextSize = 12
+                    Labels = data.Select(x => $"{x.MA_NV}\n{x.MA_HD}").ToArray(), 
+                    LabelsPaint = new SolidColorPaint(ColorPalette.TextDark),
+                    TextSize = 10
                 }
             };
         }
@@ -64,8 +53,9 @@ namespace ProjectCompletionReport.ChartBuilders
                 {
                     MinLimit = 0,
                     MaxLimit = 100,
-                    LabelsPaint = new SolidColorPaint(SKColors.White),
-                    TextSize = 11
+                    LabelsPaint = new SolidColorPaint(ColorPalette.TextDark),
+                    TextSize = 11,
+                    Labeler = value => $"{value}%"
                 }
             };
         }

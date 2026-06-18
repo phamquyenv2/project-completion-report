@@ -1,8 +1,5 @@
-namespace ProjectCompletionReport.Models
+﻿namespace ProjectCompletionReport.Models
 {
-    /// <summary>
-    /// Bảng hợp đồng (master) – FK → SAN_PHAM.
-    /// </summary>
     public class HopDong
     {
         public string MA_HD { get; set; } = string.Empty;

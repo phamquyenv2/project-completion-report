@@ -1,3 +1,7 @@
+﻿using System.Drawing;
+using System.Windows.Forms;
+using unvell.ReoGrid;
+
 namespace ProjectCompletionReport.Forms
 {
     partial class MainDashboard
@@ -13,165 +17,195 @@ namespace ProjectCompletionReport.Forms
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
         private void InitializeComponent()
         {
-            // ── Panel chính ──
-            this.pnlHeader = new Panel();
-            this.lblTitle = new Label();
-            this.pnlComboBox = new Panel();
-            this.lblFilter = new Label();
-            this.cboMaHD = new ComboBox();
-            this.pnlCharts = new TableLayoutPanel();
-
-            // ── Các chart panel ──
+            this.pnlMain = new Panel();
+            
+            this.pnlHeaderDuAn = new Panel();
+            this.lblTitleDuAn = new Label();
+            this.lblSub1DuAn = new Label();
+            this.lblSub2DuAn = new Label();
+            
+            this.gridDuAn = new DataGridView();
+            this.pnlChartsTop = new TableLayoutPanel();
             this.pnlDoughnut = new Panel();
             this.lblDoughnutTitle = new Label();
             this.pnlBasicBars = new Panel();
             this.lblBasicBarsTitle = new Label();
+
+            this.pnlHeaderNhanVien = new Panel();
+            this.lblTitleNhanVien = new Label();
+            this.lblSub1NhanVien = new Label();
+            this.lblSub2NhanVien = new Label();
+
+            this.gridNhanVien = new DataGridView();
             this.pnlStackedBars = new Panel();
             this.lblStackedBarsTitle = new Label();
 
+            this.pnlMain.SuspendLayout();
+            this.pnlHeaderDuAn.SuspendLayout();
+            this.pnlChartsTop.SuspendLayout();
+            this.pnlDoughnut.SuspendLayout();
+            this.pnlBasicBars.SuspendLayout();
+            this.pnlHeaderNhanVien.SuspendLayout();
+            this.pnlStackedBars.SuspendLayout();
             this.SuspendLayout();
 
-            // ════════════════════════════════════════
-            // pnlHeader
-            // ════════════════════════════════════════
-            this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(20, 25, 45);
-            this.pnlHeader.Dock = DockStyle.Top;
-            this.pnlHeader.Height = 70;
-            this.pnlHeader.Padding = new Padding(20, 0, 20, 0);
-            this.pnlHeader.Controls.Add(this.pnlComboBox);
-            this.pnlHeader.Controls.Add(this.lblTitle);
+            this.pnlMain.AutoScroll = true;
+            this.pnlMain.BackColor = Color.White;
+            this.pnlMain.Dock = DockStyle.Fill;
+            this.pnlMain.Padding = new Padding(20);
+            this.pnlMain.Controls.Add(this.pnlStackedBars);
+            this.pnlMain.Controls.Add(this.gridNhanVien);
+            this.pnlMain.Controls.Add(this.pnlHeaderNhanVien);
+            this.pnlMain.Controls.Add(this.pnlChartsTop);
+            this.pnlMain.Controls.Add(this.gridDuAn);
+            this.pnlMain.Controls.Add(this.pnlHeaderDuAn);
 
-            // ════════════════════════════════════════
-            // lblTitle
-            // ════════════════════════════════════════
-            this.lblTitle.Text = "📊 BÁO CÁO TỶ LỆ HOÀN THÀNH DỰ ÁN";
-            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(120, 200, 255);
-            this.lblTitle.Dock = DockStyle.Left;
-            this.lblTitle.AutoSize = true;
-            this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblTitle.Padding = new Padding(10, 0, 0, 0);
+            // pnlHeaderDuAn
+            this.pnlHeaderDuAn.BackColor = Color.FromArgb(227, 239, 255);
+            this.pnlHeaderDuAn.Dock = DockStyle.Top;
+            this.pnlHeaderDuAn.Height = 80;
+            this.pnlHeaderDuAn.Controls.Add(this.lblSub2DuAn);
+            this.pnlHeaderDuAn.Controls.Add(this.lblSub1DuAn);
+            this.pnlHeaderDuAn.Controls.Add(this.lblTitleDuAn);
 
-            // ════════════════════════════════════════
-            // pnlComboBox (chứa Label + ComboBox)
-            // ════════════════════════════════════════
-            this.pnlComboBox.Dock = DockStyle.Right;
-            this.pnlComboBox.Width = 350;
-            this.pnlComboBox.Padding = new Padding(10, 15, 20, 15);
-            this.pnlComboBox.Controls.Add(this.cboMaHD);
-            this.pnlComboBox.Controls.Add(this.lblFilter);
+            this.lblTitleDuAn.Dock = DockStyle.Top;
+            this.lblTitleDuAn.Text = "BÁO CÁO TỶ LỆ HOÀN THÀNH DỰ ÁN";
+            this.lblTitleDuAn.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            this.lblTitleDuAn.TextAlign = ContentAlignment.BottomCenter;
+            this.lblTitleDuAn.Height = 30;
 
-            // lblFilter
-            this.lblFilter.Text = "Mã HĐ:";
-            this.lblFilter.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            this.lblFilter.ForeColor = System.Drawing.Color.White;
-            this.lblFilter.Dock = DockStyle.Left;
-            this.lblFilter.AutoSize = true;
-            this.lblFilter.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.lblFilter.Padding = new Padding(0, 5, 5, 0);
+            this.lblSub1DuAn.Dock = DockStyle.Top;
+            this.lblSub1DuAn.Text = "Từ ngày 01/01/2026 đến ngày 18/06/2026";
+            this.lblSub1DuAn.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+            this.lblSub1DuAn.TextAlign = ContentAlignment.MiddleCenter;
+            this.lblSub1DuAn.Height = 20;
 
-            // cboMaHD
-            this.cboMaHD.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.cboMaHD.Dock = DockStyle.Fill;
-            this.cboMaHD.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.cboMaHD.BackColor = System.Drawing.Color.FromArgb(30, 40, 65);
-            this.cboMaHD.ForeColor = System.Drawing.Color.White;
-            this.cboMaHD.FlatStyle = FlatStyle.Flat;
+            this.lblSub2DuAn.Dock = DockStyle.Top;
+            this.lblSub2DuAn.Text = "Tài khoản: Tất cả";
+            this.lblSub2DuAn.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            this.lblSub2DuAn.TextAlign = ContentAlignment.TopCenter;
+            this.lblSub2DuAn.Height = 20;
 
-            // ════════════════════════════════════════
-            // pnlCharts (TableLayoutPanel 2x2)
-            // ════════════════════════════════════════
-            this.pnlCharts.Dock = DockStyle.Fill;
-            this.pnlCharts.BackColor = System.Drawing.Color.FromArgb(15, 20, 40);
-            this.pnlCharts.Padding = new Padding(10);
-            this.pnlCharts.ColumnCount = 2;
-            this.pnlCharts.RowCount = 2;
-            this.pnlCharts.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 45F));
-            this.pnlCharts.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 55F));
-            this.pnlCharts.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            this.pnlCharts.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            this.gridDuAn.Dock = DockStyle.Top;
+            this.gridDuAn.Height = 200;
+            this.gridDuAn.Margin = new Padding(0, 0, 0, 20);
+            this.gridDuAn.BackColor = Color.White;
 
-            // ── Panel Doughnut (trái trên) ──
-            this.pnlDoughnut.BackColor = System.Drawing.Color.FromArgb(25, 30, 55);
-            this.pnlDoughnut.Margin = new Padding(6);
+            this.pnlChartsTop.ColumnCount = 2;
+            this.pnlChartsTop.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
+            this.pnlChartsTop.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 60F));
+            this.pnlChartsTop.RowCount = 1;
+            this.pnlChartsTop.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            this.pnlChartsTop.Controls.Add(this.pnlDoughnut, 0, 0);
+            this.pnlChartsTop.Controls.Add(this.pnlBasicBars, 1, 0);
+            this.pnlChartsTop.Dock = DockStyle.Top;
+            this.pnlChartsTop.Height = 320;
+            this.pnlChartsTop.Margin = new Padding(0, 20, 0, 20);
+
             this.pnlDoughnut.Dock = DockStyle.Fill;
-
-            this.lblDoughnutTitle.Text = "🍩 TỶ LỆ HOÀN THÀNH (Doughnut)";
-            this.lblDoughnutTitle.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            this.lblDoughnutTitle.ForeColor = System.Drawing.Color.FromArgb(180, 220, 255);
+            this.pnlDoughnut.BorderStyle = BorderStyle.FixedSingle;
+            this.pnlDoughnut.Margin = new Padding(0, 0, 10, 0);
+            this.lblDoughnutTitle.Text = "HD001LQ-ITM";
             this.lblDoughnutTitle.Dock = DockStyle.Top;
-            this.lblDoughnutTitle.Height = 35;
-            this.lblDoughnutTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblDoughnutTitle.Height = 40;
+            this.lblDoughnutTitle.TextAlign = ContentAlignment.MiddleCenter;
+            this.lblDoughnutTitle.Font = new Font("Segoe UI", 12F);
             this.pnlDoughnut.Controls.Add(this.lblDoughnutTitle);
 
-            this.pnlCharts.Controls.Add(this.pnlDoughnut, 0, 0);
-
-            // ── Panel Basic Bars (phải trên) ──
-            this.pnlBasicBars.BackColor = System.Drawing.Color.FromArgb(25, 30, 55);
-            this.pnlBasicBars.Margin = new Padding(6);
             this.pnlBasicBars.Dock = DockStyle.Fill;
-
-            this.lblBasicBarsTitle.Text = "📊 SO SÁNH TASK THEO DỰ ÁN (Basic Bars)";
-            this.lblBasicBarsTitle.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            this.lblBasicBarsTitle.ForeColor = System.Drawing.Color.FromArgb(180, 220, 255);
+            this.pnlBasicBars.BorderStyle = BorderStyle.FixedSingle;
+            this.pnlBasicBars.Margin = new Padding(10, 0, 0, 0);
+            this.lblBasicBarsTitle.Text = "Tỷ lệ hoàn thành theo dự án";
             this.lblBasicBarsTitle.Dock = DockStyle.Top;
-            this.lblBasicBarsTitle.Height = 35;
-            this.lblBasicBarsTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblBasicBarsTitle.Height = 40;
+            this.lblBasicBarsTitle.TextAlign = ContentAlignment.MiddleCenter;
+            this.lblBasicBarsTitle.Font = new Font("Segoe UI", 12F);
             this.pnlBasicBars.Controls.Add(this.lblBasicBarsTitle);
 
-            this.pnlCharts.Controls.Add(this.pnlBasicBars, 1, 0);
+            // pnlHeaderNhanVien
+            this.pnlHeaderNhanVien.BackColor = Color.FromArgb(227, 239, 255);
+            this.pnlHeaderNhanVien.Dock = DockStyle.Top;
+            this.pnlHeaderNhanVien.Height = 80;
+            this.pnlHeaderNhanVien.Margin = new Padding(0, 20, 0, 0);
+            this.pnlHeaderNhanVien.Controls.Add(this.lblSub2NhanVien);
+            this.pnlHeaderNhanVien.Controls.Add(this.lblSub1NhanVien);
+            this.pnlHeaderNhanVien.Controls.Add(this.lblTitleNhanVien);
 
-            // ── Panel Stacked Bars (span cả dòng dưới) ──
-            this.pnlStackedBars.BackColor = System.Drawing.Color.FromArgb(25, 30, 55);
-            this.pnlStackedBars.Margin = new Padding(6);
-            this.pnlStackedBars.Dock = DockStyle.Fill;
+            this.lblTitleNhanVien.Dock = DockStyle.Top;
+            this.lblTitleNhanVien.Text = "BÁO CÁO TỶ LỆ HOÀN THÀNH CÔNG VIỆC CỦA TỪNG NHÂN VIÊN";
+            this.lblTitleNhanVien.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            this.lblTitleNhanVien.TextAlign = ContentAlignment.BottomCenter;
+            this.lblTitleNhanVien.Height = 30;
 
-            this.lblStackedBarsTitle.Text = "📈 TỶ LỆ HOÀN THÀNH THEO NHÂN VIÊN (Stacked Bars)";
-            this.lblStackedBarsTitle.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            this.lblStackedBarsTitle.ForeColor = System.Drawing.Color.FromArgb(180, 220, 255);
+            this.lblSub1NhanVien.Dock = DockStyle.Top;
+            this.lblSub1NhanVien.Text = "Từ ngày 01/01/2026 đến ngày 18/06/2026";
+            this.lblSub1NhanVien.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+            this.lblSub1NhanVien.TextAlign = ContentAlignment.MiddleCenter;
+            this.lblSub1NhanVien.Height = 20;
+
+            this.lblSub2NhanVien.Dock = DockStyle.Top;
+            this.lblSub2NhanVien.Text = "Dự án: HD001LQ-ITM";
+            this.lblSub2NhanVien.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            this.lblSub2NhanVien.TextAlign = ContentAlignment.TopCenter;
+            this.lblSub2NhanVien.Height = 20;
+
+            this.gridNhanVien.Dock = DockStyle.Top;
+            this.gridNhanVien.Height = 200;
+            this.gridNhanVien.Margin = new Padding(0, 0, 0, 20);
+            this.gridNhanVien.BackColor = Color.White;
+
+            this.pnlStackedBars.Dock = DockStyle.Top;
+            this.pnlStackedBars.Height = 400;
+            this.pnlStackedBars.BorderStyle = BorderStyle.FixedSingle;
+            this.pnlStackedBars.Margin = new Padding(0, 20, 0, 20);
+            this.lblStackedBarsTitle.Text = "Tỷ lệ hoàn thành theo nhân viên";
             this.lblStackedBarsTitle.Dock = DockStyle.Top;
-            this.lblStackedBarsTitle.Height = 35;
-            this.lblStackedBarsTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblStackedBarsTitle.Height = 40;
+            this.lblStackedBarsTitle.TextAlign = ContentAlignment.MiddleCenter;
+            this.lblStackedBarsTitle.Font = new Font("Segoe UI", 12F);
             this.pnlStackedBars.Controls.Add(this.lblStackedBarsTitle);
 
-            this.pnlCharts.Controls.Add(this.pnlStackedBars, 0, 1);
-            this.pnlCharts.SetColumnSpan(this.pnlStackedBars, 2);
-
-            // ════════════════════════════════════════
-            // MainDashboard
-            // ════════════════════════════════════════
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new SizeF(7F, 15F);
             this.AutoScaleMode = AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(15, 20, 40);
-            this.ClientSize = new System.Drawing.Size(1280, 780);
-            this.Controls.Add(this.pnlCharts);
-            this.Controls.Add(this.pnlHeader);
+            this.BackColor = Color.White;
+            this.ClientSize = new Size(1280, 800);
+            this.Controls.Add(this.pnlMain);
             this.Name = "MainDashboard";
-            this.Text = "Project Completion Report - Dashboard";
-            this.StartPosition = FormStartPosition.CenterScreen;
+            this.Text = "Báo cáo tiến độ dự án";
             this.WindowState = FormWindowState.Maximized;
-            this.Font = new System.Drawing.Font("Segoe UI", 9F);
 
+            this.pnlHeaderDuAn.ResumeLayout(false);
+            this.pnlChartsTop.ResumeLayout(false);
+            this.pnlDoughnut.ResumeLayout(false);
+            this.pnlBasicBars.ResumeLayout(false);
+            this.pnlHeaderNhanVien.ResumeLayout(false);
+            this.pnlStackedBars.ResumeLayout(false);
+            this.pnlMain.ResumeLayout(false);
             this.ResumeLayout(false);
         }
 
-        #endregion
-
-        private Panel pnlHeader;
-        private Label lblTitle;
-        private Panel pnlComboBox;
-        private Label lblFilter;
-        private ComboBox cboMaHD;
-        private TableLayoutPanel pnlCharts;
-
+        private Panel pnlMain;
+        
+        private Panel pnlHeaderDuAn;
+        private Label lblTitleDuAn;
+        private Label lblSub1DuAn;
+        private Label lblSub2DuAn;
+        private DataGridView gridDuAn;
+        
+        private TableLayoutPanel pnlChartsTop;
         private Panel pnlDoughnut;
         private Label lblDoughnutTitle;
         private Panel pnlBasicBars;
         private Label lblBasicBarsTitle;
+
+        private Panel pnlHeaderNhanVien;
+        private Label lblTitleNhanVien;
+        private Label lblSub1NhanVien;
+        private Label lblSub2NhanVien;
+        private DataGridView gridNhanVien;
+
         private Panel pnlStackedBars;
         private Label lblStackedBarsTitle;
     }
