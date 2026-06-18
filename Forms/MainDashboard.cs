@@ -137,7 +137,7 @@ namespace ProjectCompletionReport.Forms
             gridDuAn.Columns["MaSP"].HeaderText = "Mã SP"; gridDuAn.Columns["MaSP"].Width = 80;
             gridDuAn.Columns["SLTask"].HeaderText = "SL Task"; gridDuAn.Columns["SLTask"].Width = 90; gridDuAn.Columns["SLTask"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             
-            gridDuAn.Height = (duAnData.Count * 22) + 25 + 2; // Rows + Header + Borders
+            gridDuAn.Height = (duAnData.Count * 22) + 25 + 2; 
 
             StyleGrid(gridNhanVien);
             gridNhanVien.DataSource = filteredNhanVien.Select(x => new {

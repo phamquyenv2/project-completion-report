@@ -62,7 +62,6 @@ namespace ProjectCompletionReport.Forms
             this.pnlMain.Controls.Add(this.gridDuAn);
             this.pnlMain.Controls.Add(this.pnlHeaderDuAn);
 
-            // pnlHeaderDuAn
             this.pnlHeaderDuAn.BackColor = Color.FromArgb(227, 239, 255);
             this.pnlHeaderDuAn.Dock = DockStyle.Top;
             this.pnlHeaderDuAn.Height = 80;
@@ -124,7 +123,6 @@ namespace ProjectCompletionReport.Forms
             this.lblBasicBarsTitle.Font = new Font("Segoe UI", 12F);
             this.pnlBasicBars.Controls.Add(this.lblBasicBarsTitle);
 
-            // pnlHeaderNhanVien
             this.pnlHeaderNhanVien.BackColor = Color.FromArgb(227, 239, 255);
             this.pnlHeaderNhanVien.Dock = DockStyle.Top;
             this.pnlHeaderNhanVien.Height = 80;
